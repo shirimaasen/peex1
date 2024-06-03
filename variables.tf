@@ -33,3 +33,9 @@ variable "key_pair_name" {
   type        = string
   default = "peex"
 }
+
+variable "lifecycle_ignore_changes" {
+  description = "lifecycle_ignore_changesr"
+  type        = bool
+  default     = false
+}

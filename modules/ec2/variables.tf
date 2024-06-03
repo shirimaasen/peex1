@@ -15,6 +15,11 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "sg_name" {
+  description = "EC2 user data"
+  type        = string
+}
+
 variable "subnet_id" {
   description = "The subnet ID"
   type        = string
@@ -47,5 +52,10 @@ variable "tags" {
 
 variable "user_data" {
   description = "EC2 user data"
+  type        = string
+}
+
+variable "key_pair_version" {
+  description = "The ID of the key pair version from Secrets Manager"
   type        = string
 }

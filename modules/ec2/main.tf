@@ -1,4 +1,4 @@
-data "aws_ami" "ubuntu" {
+data "aws_ami" "this" {
   most_recent = true
   filter {
     name   = "name"
@@ -12,11 +12,20 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_security_group" "peex_sg" {
+  name = var.sg_name
+  description = "Allow HTTP and SSH traffic"
   vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -45,7 +54,7 @@ resource "aws_eip" "peex-eip" {
 }
 
 resource "aws_instance" "peex-secret-instance" {
-  ami                  = data.aws_ami.ubuntu.id
+  ami                  = data.aws_ami.this.id
   instance_type        = var.instance_type
   key_name             = var.key_pair_name
   iam_instance_profile = var.iam_instance_profile
@@ -57,6 +66,7 @@ resource "aws_instance" "peex-secret-instance" {
   tags = var.tags
 
   depends_on = [
+    var.key_pair_version,
     aws_eip.peex-eip
   ]
 }

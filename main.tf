@@ -15,33 +15,37 @@ module "vpc" {
 module "secrets" {
   source                = "./modules/secrets"
   passwd_len            = 24
-  peex_creds            = "peex-mysql-credentials"
+  peex_creds            = "peex1-credentials"
   peex_creds_desc       = "MySQL credentials"
   username              = "admin"
-  peex_key_pair_name    = "key-pair"
+  peex_key_pair_name    = "ec2-key-pair"
   peex_key_pair_value   = "peex"
   peex_key_pair_desc    = "Key Pair Name for EC2"
+  lifecycle_ignore_changes = true
 }
 
 module "iam" {
   source                = "./modules/iam"
   role_name             = "peex1-secret-role"
   policy_name           = "peex1-secret-policy"
-  secret_arn            = "arn:aws:secretsmanager:eu-west-1:*:secret:mysql-credentials-*"
+  secret_arn            = "arn:aws:secretsmanager:eu-west-1:*:secret:peex1-credentials-*"
   instance_profile_name = "peex1-secret-instance-profile"
 }
 
 module "ec2_instance" {
   source                 = "./modules/ec2"
   ami_name               = var.ami_name
+  owners = var.owners
+  sg_name                = "peex_sg"
   vpc_id                 = module.vpc.vpc_id
   subnet_id              = module.vpc.subnet_id
   private_ip             = var.private_ip
   instance_type          = "t2.micro"
   key_pair_name          = "peex"
+  key_pair_version       = module.secrets.peex_key_pair_version
   iam_instance_profile   = module.iam.instance_profile_name
   tags                   = {
     Name = "peex1-secret-instance"
   }
-  user_data = file("${path.module}/assets/get_secret.sh")
+  user_data = file("${path.root}/assets/get_secret.sh")
 }

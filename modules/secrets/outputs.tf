@@ -5,5 +5,10 @@ output "peex_secret_id" {
 
 output "peex_key_pair_name" {
   description = "The name of the key pair"
-  value       = local.key_pair_name
+  value       = aws_secretsmanager_secret.peex_key_pair.name
+}
+
+output "peex_key_pair_version" {
+  description = "The key pair version"
+  value       = aws_secretsmanager_secret.peex_key_pair.id
 }

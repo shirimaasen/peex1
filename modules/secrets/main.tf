@@ -9,6 +9,7 @@ resource "aws_secretsmanager_secret" "peex_creds" {
 
   lifecycle {
     prevent_destroy = true
+    ignore_changes = [name, description]
   }
 }
 
@@ -18,6 +19,10 @@ resource "aws_secretsmanager_secret_version" "peex_creds_version" {
     username = var.username,
     password = random_password.peex_passwd.result
   })
+
+  lifecycle {
+    ignore_changes = [ secret_string ]
+  }
 }
 
 resource "aws_secretsmanager_secret" "peex_key_pair" {
@@ -26,6 +31,7 @@ resource "aws_secretsmanager_secret" "peex_key_pair" {
 
   lifecycle {
     prevent_destroy = true
+    ignore_changes = [name, description]
   }
 
 }
@@ -35,6 +41,23 @@ resource "aws_secretsmanager_secret_version" "peex_key_pair_version" {
   secret_string = jsonencode({
     key = var.peex_key_pair_value
   })
+
+  lifecycle {
+    ignore_changes = [ secret_string ]
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "ignore_changes" {
+  count = var.lifecycle_ignore_changes ? 1 : 0
+  secret_id     = aws_secretsmanager_secret.peex_creds.id
+  secret_string = jsonencode({
+    username = var.username,
+    password = random_password.peex_passwd.result
+  })
+
+  lifecycle {
+    ignore_changes = [ secret_string ]
+  }
 }
 
 data "aws_secretsmanager_secret" "peex_key_pair" {
@@ -43,8 +66,4 @@ data "aws_secretsmanager_secret" "peex_key_pair" {
 
 data "aws_secretsmanager_secret_version" "peex_key_pair_version" {
   secret_id = data.aws_secretsmanager_secret.peex_key_pair.id
-}
-
-locals {
-  key_pair_name = jsondecode(data.aws_secretsmanager_secret_version.peex_key_pair_version.secret_string).key
 }

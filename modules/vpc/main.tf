@@ -1,6 +1,12 @@
 resource "aws_vpc" "peex_vpc" {
   cidr_block = var.vpc_cidr_block
 
+  lifecycle {
+    ignore_changes = [
+      cidr_block
+    ]
+  }
+
   tags = {
     Name = var.vpc_name
   }

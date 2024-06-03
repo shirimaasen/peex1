@@ -1,5 +1,6 @@
 resource "aws_iam_role" "peex-secret-role" {
   name = var.role_name
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -42,8 +43,4 @@ resource "aws_iam_instance_profile" "peex-secret-instance-profile" {
     create_before_destroy = true
     ignore_changes = [name]
   }
-}
-
-output "instance_profile_name" {
-  value = aws_iam_instance_profile.peex-secret-instance-profile.name
 }
