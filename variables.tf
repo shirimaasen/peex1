@@ -40,6 +40,7 @@ variable "private_ip" {
 variable "ec2_key_pair_name" {
   description = "The key name to use for the instance"
   type        = string
+  default = "peex"
 }
 
 variable "ec2_key_pair_value" {

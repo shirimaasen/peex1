@@ -43,13 +43,8 @@ variable "instance_type" {
   type        = string
 }
 
-variable "key_pair_name" {
+variable "key_name" {
   description = "The key name to use for the instance"
-  type        = string
-}
-
-variable "key_pair_version" {
-  description = "The ID of the key pair version from Secrets Manager"
   type        = string
 }
 
