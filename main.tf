@@ -34,7 +34,7 @@ module "sql_creds" {
     username = var.secret_username,
     password = random_password.this.result
   })
-  lifecycle_ignore_changes = true
+  lifecycle_ignore_changes = false
 }
 
 module "ec2_key_pair" {
@@ -44,7 +44,7 @@ module "ec2_key_pair" {
   secret_string = jsonencode({
     key = var.ec2_key_pair_value
   })
-  lifecycle_ignore_changes = true
+  lifecycle_ignore_changes = false
 }
 
 module "iam" {
@@ -55,7 +55,7 @@ module "iam" {
   role_name             = var.role_name
 }
 
-module "ec2_instance" {
+module "ec2" {
   source                 = "./modules/ec2"
   ami_name               = var.ami_name
   virtualization_type    = var.virtualization_type
@@ -66,8 +66,7 @@ module "ec2_instance" {
   subnet_id              = module.vpc.subnet_id
   private_ip             = var.private_ip
   instance_type          = var.instance_type
-  key_pair_name          = var.ec2_key_pair_name
-  key_pair_version       = module.ec2_key_pair.secret_version_id
+  key_name               = jsondecode(module.ec2_key_pair.secret_string).key
   iam_instance_profile   = var.instance_profile_name
   role_name              = var.role_name
   instance_profile_name  = var.instance_profile_name

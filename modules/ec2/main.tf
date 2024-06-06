@@ -38,7 +38,7 @@ resource "aws_security_group" "this" {
   }
 
   tags = {
-    Name = "var.sg_tag"
+    Name = var.sg_tag
   }
 }
 
@@ -54,9 +54,9 @@ resource "aws_eip" "this" {
 }
 
 resource "aws_instance" "this" {
-  ami                  = var.ami_name
+  ami                  = data.aws_ami.this.id
   instance_type        = var.instance_type
-  key_name             = var.key_pair_name
+  key_name             = var.key_name
   iam_instance_profile = var.iam_instance_profile
   network_interface {
     network_interface_id = aws_network_interface.this.id
@@ -66,7 +66,7 @@ resource "aws_instance" "this" {
   tags = var.ec2_tags
 
   depends_on = [
-    var.key_pair_version,
+    var.key_name,
     aws_eip.this
   ]
 }
