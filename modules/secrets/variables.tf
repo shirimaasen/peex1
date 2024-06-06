@@ -4,12 +4,17 @@ variable "passwd_len" {
   default     = 16
 }
 
-variable "peex_creds" {
+variable "secret_name" {
   description = "The name of the MySQL credentials secret"
   type        = string
 }
 
-variable "peex_creds_desc" {
+variable "secret_description" {
+  description = "The name of the MySQL credentials secret"
+  type        = string
+}
+
+variable "secret_string" {
   description = "The name of the MySQL credentials secret"
   type        = string
 }
@@ -20,25 +25,8 @@ variable "username" {
   default     = "admin"
 }
 
-variable "peex_key_pair_name" {
-  description = "The name of the key pair secret"
-  type        = string
-}
-
-variable "peex_key_pair_desc" {
-  description = "The name of the key pair secret"
-  type        = string
-}
-
-variable "peex_key_pair_value" {
-  description = "The value of the key pair"
-  type        = string
-  default     = "peex"
-}
-
 variable "lifecycle_ignore_changes" {
   description = "lifecycle_ignore_changesr"
   type        = bool
   default     = false
 }
-

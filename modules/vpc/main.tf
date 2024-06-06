@@ -1,4 +1,4 @@
-resource "aws_vpc" "peex_vpc" {
+resource "aws_vpc" "this" {
   cidr_block = var.vpc_cidr_block
 
   lifecycle {
@@ -12,8 +12,8 @@ resource "aws_vpc" "peex_vpc" {
   }
 }
 
-resource "aws_subnet" "peex_subnet" {
-  vpc_id                  = aws_vpc.peex_vpc.id
+resource "aws_subnet" "this" {
+  vpc_id                  = aws_vpc.this.id
   cidr_block              = var.subnet_cidr_block
   map_public_ip_on_launch = true
 
@@ -22,20 +22,20 @@ resource "aws_subnet" "peex_subnet" {
   }
 }
 
-resource "aws_internet_gateway" "peex_igw" {
-  vpc_id = aws_vpc.peex_vpc.id
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
 
   tags = {
     Name = var.igw_name
   }
 }
 
-resource "aws_route_table" "peex_route_table" {
-  vpc_id = aws_vpc.peex_vpc.id
+resource "aws_route_table" "this" {
+  vpc_id = aws_vpc.this.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.peex_igw.id
+    gateway_id = aws_internet_gateway.this.id
   }
 
   tags = {
@@ -43,7 +43,7 @@ resource "aws_route_table" "peex_route_table" {
   }
 }
 
-resource "aws_route_table_association" "peex-route-table-association" {
-  subnet_id      = aws_subnet.peex_subnet.id
-  route_table_id = aws_route_table.peex_route_table.id
+resource "aws_route_table_association" "this" {
+  subnet_id      = aws_subnet.this.id
+  route_table_id = aws_route_table.this.id
 }
