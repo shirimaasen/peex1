@@ -1,4 +1,4 @@
-resource "aws_iam_role" "peex-secret-role" {
+resource "aws_iam_role" "this" {
   name = var.role_name
 
   assume_role_policy = jsonencode({
@@ -13,14 +13,13 @@ resource "aws_iam_role" "peex-secret-role" {
   })
 
   lifecycle {
-    create_before_destroy = true
     ignore_changes = [name]
   }
 }
 
-resource "aws_iam_role_policy" "peex-secret-policy" {
+resource "aws_iam_role_policy" "this" {
   name = var.policy_name
-  role = aws_iam_role.peex-secret-role.id
+  role = aws_iam_role.this.id
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -33,14 +32,4 @@ resource "aws_iam_role_policy" "peex-secret-policy" {
       }
     ]
   })
-}
-
-resource "aws_iam_instance_profile" "peex-secret-instance-profile" {
-  name = var.instance_profile_name
-  role = aws_iam_role.peex-secret-role.name
-
-  lifecycle {
-    create_before_destroy = true
-    ignore_changes = [name]
-  }
 }

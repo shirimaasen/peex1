@@ -1,14 +1,10 @@
-output "peex_secret_id" {
-  description = "The ID of the MySQL credentials secret"
-  value       = aws_secretsmanager_secret.peex_creds.id
-}
-
-output "peex_key_pair_name" {
+output "secret_name" {
   description = "The name of the key pair"
-  value       = aws_secretsmanager_secret.peex_key_pair.name
+  value       = aws_secretsmanager_secret.this.name
+  sensitive   = true
 }
 
-output "peex_key_pair_version" {
+output "secret_version_id" {
   description = "The key pair version"
-  value       = aws_secretsmanager_secret.peex_key_pair.id
+  value       = aws_secretsmanager_secret.this.id
 }
